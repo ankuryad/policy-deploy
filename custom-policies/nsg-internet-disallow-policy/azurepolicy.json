@@ -1,65 +1,64 @@
 {
-    displayName: "Deny route with next hop type internet and unattached static Public IPs",
-    description: "Deny route with next hop type internet and unattached static Public IPs to ensure no direct internet connection for any resoure.",
-    policyType: "Custom",
-    mode: "All",
-    metadata: {
-        category: "Network"
+    "displayName":"Deny route with next hop type internet and unattached static Public IPs",
+    "description":"Deny route with next hop type internet and unattached static Public IPs to ensure no direct internet connection or route for any resoure.",
+    "policyType":"Custom",
+    "mode":"All",
+    "metadata":{
+       "category":"Network"
     },
-    policyRule: {
-        if: {
-            anyOf: [
-                {
-                    allOf: [
-                        {
-                            field: "type",
-                            equals: "Microsoft.Network/routeTables"
-                        },
-                        {
-                            count: {
-                                field: "Microsoft.Network/routeTables/routes[*]",
-                                where: {
-                                    field: "Microsoft.Network/routeTables/routes[*].nextHopType",
-                                    equals: "Internet"
-                                }
-                            },
-                        greater: 0
-                    }
+    "policyRule":{
+       "if":{
+          "anyOf":[
+             {
+                "allOf":[
+                   {
+                      "field":"type",
+                      "equals":"Microsoft.Network/routeTables"
+                   },
+                   {
+                      "count":{
+                         "field":"Microsoft.Network/routeTables/routes[*]",
+                         "where":{
+                            "field":"Microsoft.Network/routeTables/routes[*].nextHopType",
+                            "equals":"Internet"
+                         }
+                      },
+                      "greater":0
+                   }
                 ]
-            },
-            {
-                    allOf: [
-                        {
-                            field: "type",
-                            equals: "Microsoft.Network/routeTables/routes"
-                        },
-                        {
-                            field: "Microsoft.Network/routeTables/routes/nextHopType",
-                            equals: "Internet"
-                        }
-                    
-                    ]
-                }
-                {
-                    allOf: [
-                        {
-                            field: "type",
-                            equals: "Microsoft.Network/publicIPAddresses"
-                        },
-                        {
-                            field: "Microsoft.Network/publicIPAddresses/publicIPAllocationMethod",
-                            equals: "Static"
-                        },
-                        {
-                            field: "Microsoft.Network/publicIPAddresses/ipConfiguration",
-                            exists: false
-                        }
-                    ]
-                },    
-            ]
-        },
-        then: {
-            effect: "deny"
-        }
+             },
+             {
+                "allOf":[
+                   {
+                      "field":"type",
+                      "equals":"Microsoft.Network/routeTables/routes"
+                   },
+                   {
+                      "field":"Microsoft.Network/routeTables/routes/nextHopType",
+                      "equals":"Internet"
+                   }
+                ]
+             },
+             {
+                "allOf":[
+                   {
+                      "field":"type",
+                      "equals":"Microsoft.Network/publicIPAddresses"
+                   },
+                   {
+                      "field":"Microsoft.Network/publicIPAddresses/publicIPAllocationMethod",
+                      "equals":"Static"
+                   },
+                   {
+                      "field":"Microsoft.Network/publicIPAddresses/ipConfiguration",
+                      "exists":false
+                   }
+                ]
+             }
+          ]
+       },
+       "then":{
+          "effect":"deny"
+       }
     }
-}
+ }
